@@ -6,6 +6,21 @@ import jakarta.persistence.*;
 @Table(name = "instructor_detail")
 public class InstructorDetail {
 
+
+    //for bidirectional mapping
+
+    @OneToOne(mappedBy = "instructorDetail", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    //hibernate looks for "instructorDetail" property in "Instructor class"
+    private Instructor instructor;
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
+
     //annotate the class as an entity and map db table
     //define the fields
     //annotate the field with db column name
