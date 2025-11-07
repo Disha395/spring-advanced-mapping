@@ -1,6 +1,7 @@
 package com.mapping.mappingdemo;
 
 import com.mapping.mappingdemo.dao.AppDAO;
+import com.mapping.mappingdemo.entity.Course;
 import com.mapping.mappingdemo.entity.Instructor;
 import com.mapping.mappingdemo.entity.InstructorDetail;
 import org.springframework.boot.CommandLineRunner;
@@ -22,9 +23,57 @@ public class MappingdemoApplication {
 			//findInstructor(appDAO);
 			//deleteInstructor(appDAO);
 			//findInstructorDetail(appDAO);
-			deleteInstructorDetail(appDAO);
+			//deleteInstructorDetail(appDAO);
+			//createInstructorWithCourses(appDAO);
+			findInstructorWithCourses(appDAO);
 		};
 
+	}
+
+	private void findInstructorWithCourses(AppDAO appDAO) {
+
+		int id = 1;
+		System.out.println("Finding Instructor id : " + id);
+
+
+
+		Instructor tempInstructor = appDAO.findInstructorById(id);
+
+		System.out.println("tempInstructor : " + tempInstructor);
+		System.out.println("Associated Courses : " + tempInstructor.getCourse());
+		System.out.println("Done");
+	}
+
+	private void createInstructorWithCourses(AppDAO appDAO) {
+
+		Instructor tempInstructor = new Instructor(
+				"Randall",
+				"Boggs",
+				"randall@gmail.com"
+		);
+
+		//create the instructor detail
+		InstructorDetail tempInstructorDetail = new InstructorDetail(
+				"https://youtube.com",
+				"Scaring children"
+		);
+
+		//associate the objects
+		tempInstructor.setInstructorDetail(tempInstructorDetail);
+
+		Course tempCourse1 = new Course("How to be a Monster");
+		Course tempCourse2 = new Course("How to be Scary");
+
+		tempInstructor.add(tempCourse1);
+		tempInstructor.add(tempCourse2);
+
+		//save instructor
+		//Because of CascadeType.PERSIST this will save courses also
+		System.out.println("Saving instructor " + tempInstructor);
+		appDAO.save(tempInstructor);
+		System.out.println("The course " + tempInstructor.getCourse());
+
+		System.out.println("Done");
 	}
 
 	private void deleteInstructorDetail(AppDAO appDAO) {

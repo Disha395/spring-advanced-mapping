@@ -2,6 +2,9 @@ package com.mapping.mappingdemo.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "instructor")
 public class Instructor {
@@ -27,6 +30,11 @@ public class Instructor {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "instructor_detail_id")
     private InstructorDetail instructorDetail;
+
+    @OneToMany(fetch = FetchType.LAZY ,mappedBy = "instructor",
+    cascade = {CascadeType.PERSIST, CascadeType.DETACH,
+            CascadeType.MERGE, CascadeType.REFRESH})
+    private List<Course> course;
 
     private Instructor(){
 
@@ -87,5 +95,25 @@ public class Instructor {
                 ", email='" + email + '\'' +
                 ", instructorDetail=" + instructorDetail +
                 '}';
+    }
+
+    public List<Course> getCourse() {
+        return course;
+    }
+
+    public void setCourse(List<Course> course) {
+        this.course = course;
+    }
+
+    //add bidirectional relationship
+
+    public void add(Course tempCourse){
+        if(course == null){
+            course = new ArrayList<>();
+        }
+
+        course.add(tempCourse);
+
+        tempCourse.setInstructor(this);
     }
 }
